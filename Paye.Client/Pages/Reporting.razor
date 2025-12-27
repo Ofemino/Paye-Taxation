@@ -1,0 +1,84 @@
+@page "/reporting"
+@inject Paye.Client.Services.ApiClient ApiClient
+@using Paye.Client.DTOs
+
+<h3>Reporting Dashboard</h3>
+
+<div class="container">
+    <div class="card mb-4">
+        <div class="card-body">
+            <div class="row g-3">
+                <div class="col-md-3">
+                    <input type="text" class="form-control" placeholder="Staff ID" @bind="_staffId" />
+                </div>
+                <div class="col-md-3">
+                    <input type="text" class="form-control" placeholder="Branch" @bind="_branch" />
+                </div>
+                <div class="col-md-3">
+                    <input type="text" class="form-control" placeholder="State" @bind="_state" />
+                </div>
+                <div class="col-md-2">
+                    <input type="number" class="form-control" placeholder="Year" @bind="_taxYear" />
+                </div>
+                <div class="col-md-1">
+                    <button class="btn btn-primary" @onclick="LoadReports">Filter</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @if (_submissions == null)
+    {
+        <p>Loading...</p>
+    }
+    else if (!_submissions.Any())
+    {
+        <p>No submissions found.</p>
+    }
+    else
+    {
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Staff ID</th>
+                    <th>Year</th>
+                    <th>Type</th>
+                    <th>Rent</th>
+                    <th>Interest</th>
+                    <th>Docs</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in _submissions)
+                {
+                    <tr>
+                        <td>@item.StaffId</td>
+                        <td>@item.TaxYear</td>
+                        <td>@item.OwnershipType</td>
+                        <td>@item.AnnualRent?.ToString("C")</td>
+                        <td>@item.DeductibleInterest?.ToString("C")</td>
+                        <td>@item.SupportingDocuments.Count</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+</div>
+
+@code {
+    private string? _staffId;
+    private string? _branch;
+    private string? _state;
+    private int? _taxYear;
+    private List<TaxReliefSubmissionDto>? _submissions = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadReports();
+    }
+
+    private async Task LoadReports()
+    {
+        _submissions = await ApiClient.GetReportsAsync(_staffId, _branch, _state, _taxYear);
+    }
+}

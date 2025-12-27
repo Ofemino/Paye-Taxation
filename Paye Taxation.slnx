@@ -1,0 +1,13 @@
+<Solution>
+  <Folder Name="/src/" />
+  <Folder Name="/src/BackEnd/">
+    <Project Path="BackEnd/Api/Paye.Api.csproj" />
+    <Project Path="BackEnd/Application/Paye.Application.csproj" />
+    <Project Path="BackEnd/Domain/Paye.Domain.csproj" />
+    <Project Path="BackEnd/Infrastructure/Paye.Infrastructure.csproj" />
+    <Project Path="BackEnd/Shared/Paye.Shared.csproj" />
+  </Folder>
+  <Folder Name="/src/FrontEnd/">
+    <Project Path="Paye.Client/Paye.Client.csproj" />
+  </Folder>
+</Solution>
